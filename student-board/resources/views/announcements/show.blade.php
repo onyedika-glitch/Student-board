@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('content') <h1>{{ $announcement->title }}</h1> <p>{{ $announcement->content }}</p> @endsection

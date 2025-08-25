@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Requests\Result; use Illuminate\Foundation\Http\FormRequest;
+class StoreResultRequest extends FormRequest{ public function authorize():bool{ return auth()->check()&&auth()->user()->isAdmin(); } public function rules():array{ return ['student_id'=>['required','integer','exists:users,id'],'course_code'=>['required','string','max:20'],'grade'=>['required','string','max:5'],'semester'=>['required','string','max:30']]; }}

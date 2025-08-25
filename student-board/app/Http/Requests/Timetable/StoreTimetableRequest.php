@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Requests\Timetable; use Illuminate\Foundation\Http\FormRequest;
+class StoreTimetableRequest extends FormRequest{ public function authorize():bool{ return auth()->check()&&auth()->user()->isAdmin(); } public function rules():array{ return ['course_code'=>['nullable','string','max:20'],'semester'=>['required','string','max:30'],'file'=>['required','file','mimes:pdf,doc,docx,xlsx,xls']]; }}

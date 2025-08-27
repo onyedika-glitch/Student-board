@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\{
     ResultController,
     UserController,
     ProfileController,
+    DashboardController,
 };
 
 /*
@@ -31,6 +32,7 @@ Route::get('/events/{event}', [EventController::class, 'show'])->name('events.sh
 // Timetables
 Route::get('/timetables', [TimetableController::class, 'index'])->name('timetables.index');
 
+
 // Results (students must log in to see their results)
 Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->name('results.index');
 
@@ -43,11 +45,15 @@ Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 });
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
+
 /*
 |--------------------------------------------------------------------------
 | Admin Routes (restricted to admins only)
@@ -81,4 +87,4 @@ Route::middleware(['auth', 'can:access-admin'])
 | Installed automatically by Breeze.
 |
 */
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';  

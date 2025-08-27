@@ -1,35 +1,36 @@
 @extends('layouts.app')
-@section('title', 'Timetables')
-
+@section('title', 'Results')
 @section('content')
-<div class="bg-white rounded shadow p-6">
-    <h2 class="text-xl font-semibold mb-4">📊 Timetable</h2>
-
-    @if($timetables->count())
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="px-4 py-2 text-left">Course</th>
-                        <th class="px-4 py-2 text-left">Day</th>
-                        <th class="px-4 py-2 text-left">Time</th>
-                        <th class="px-4 py-2 text-left">Venue</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($timetables as $item)
-                        <tr class="border-t">
-                            <td class="px-4 py-2">{{ $item->course_name }}</td>
-                            <td class="px-4 py-2">{{ $item->day }}</td>
-                            <td class="px-4 py-2">{{ $item->time }}</td>
-                            <td class="px-4 py-2">{{ $item->venue }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @else
-        <p class="text-gray-500">No timetables available.</p>
-    @endif
-</div>
+<h1>Timetable</h1>
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Days</th>
+            <th>8:30-9:30</th>
+            <th>9:30-10:30</th>
+            <th>10:30-11:30</th>
+            <th>11:30-12:30</th>
+            <th>12:30-1:30</th>
+            <th>1:30-2:30</th>
+            <th>2:30-3:30</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(['Monday','Tuesday','Wednesday','Thursday','Friday'] as $day)
+            <tr>
+                <td><b>{{ $day }}</b></td>
+                @foreach(['8:30-9:30','9:30-10:30','10:30-11:30','11:30-12:30','12:30-1:30','1:30-2:30','2:30-3:30'] as $slot)
+                    <td>
+                        @php
+                            $course = $courses->where('day',$day)->where('time_slot',$slot)->first();
+                        @endphp
+                        @if($course)
+                            {{ $course->code }} ({{ $course->venue }})
+                        @endif
+                    </td>
+                @endforeach
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 @endsection

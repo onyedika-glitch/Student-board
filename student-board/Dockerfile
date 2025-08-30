@@ -1,10 +1,6 @@
 # Stage 1: Build dependencies with Composer
 FROM composer:2 AS vendor
 
-WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
-
 # Stage 2: PHP-FPM + Nginx
 FROM php:8.1-fpm
 

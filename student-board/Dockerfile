@@ -2,7 +2,7 @@
 FROM composer:2 AS vendor
 
 # Stage 2: PHP-FPM + Nginx
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Install required packages
 RUN apt-get update && apt-get install -y \

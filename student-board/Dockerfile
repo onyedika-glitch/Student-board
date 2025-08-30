@@ -17,8 +17,6 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy vendor from Stage 1
-COPY --from=vendor /app/vendor ./vendor
 
 # Copy rest of Laravel app
 COPY . .

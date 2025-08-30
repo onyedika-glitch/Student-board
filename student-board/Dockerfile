@@ -30,9 +30,8 @@ COPY --from=vendor /app/vendor ./vendor
 COPY student-board/ ./
 
 # Copy configs
-COPY student-board/docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY student-board/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache

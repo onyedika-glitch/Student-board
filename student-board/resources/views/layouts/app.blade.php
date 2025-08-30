@@ -4,7 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Student Board') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
+
+    <!-- Tailwind (compiled once into public/css/app.css) -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- Extra styles -->
+    @stack('styles')
+
+    <!-- Inline custom CSS (from DB or config) -->
+    @if (function_exists('customCode') && customCode()?->css)
+        <style>
+            {!! customCode()->css !!}
+        </style>
+    @endif
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen bg-gray-100">
@@ -25,5 +39,17 @@
         </main>
         @include('partials.footer')
     </div>
+     <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Extra scripts -->
+    @stack('scripts')
+
+    <!-- Inline custom JS -->
+    @if (function_exists('customCode') && customCode()?->js)
+        <script>
+            {!! customCode()->js !!}
+        </script>
+    @endif
 </body>
 </html>

@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     git \
     nginx \
     supervisor \
+     libonig-dev \
+    zlib1g-dev \
  && docker-php-ext-install pdo pdo_pgsql mbstring bcmath zip
 
 # Set working directory

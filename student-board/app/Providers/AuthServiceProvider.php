@@ -12,7 +12,18 @@ class AuthServiceProvider extends ServiceProvider {
         Timetable::class => TimetablePolicy::class,
         Result::class => ResultPolicy::class,
     ];
-    public function boot(): void {
-        Gate::define('access-admin', fn(User $user) => ($user->role ?? null) === 'admin');
+    public function boot(): void
+{
+    $this->registerPolicies();
+
+    Gate::before(function ($user, $ability) {
+        if ($user->role === 'admin') {
+            return true; // allow everything
+        }
+    });
+
+}
+
+
     }
 }

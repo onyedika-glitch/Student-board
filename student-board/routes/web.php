@@ -11,7 +11,7 @@ use App\Http\Controllers\Web\{
     ProfileController,
     DashboardController,
 };
-
+use App\Http\Controllers\Admin\AdminDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Public Routes (accessible to everyone)
@@ -37,6 +37,15 @@ Route::get('/timetables', [TimetableController::class, 'index'])->name('timetabl
 Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->name('results.index');
 
 
+// JSON feed for calendar
+Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
+
+// Calendar UI page
+Route::get('/calendar', function () {
+    return view('events.calendar');
+})->name('events.calendar');
+
+
 /*
 |--------------------------------------------------------------------------
 | Authenticated User Routes (via Breeze)
@@ -59,11 +68,11 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes (restricted to admins only)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'can:access-admin'])
+Route::middleware(['auth','admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::view('/', 'dashboard')->name('dashboard');
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('announcements', AnnouncementController::class)
             ->except(['index', 'show']);

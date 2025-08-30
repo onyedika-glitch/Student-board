@@ -5,9 +5,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Timetable\StoreTimetableRequest;
 use App\Models\Timetable;
 use App\Models\Course; // <-- make sure Course model exists
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 
 class TimetableController extends Controller {
+     use AuthorizesRequests;
     public function index()
     {
         if (auth()->check()) {

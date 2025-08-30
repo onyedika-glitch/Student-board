@@ -20,7 +20,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('role')->default('student');
-            $table->boolean('is_admin')->default(false);
+            //$table->boolean('is_admin')->default(false);
             $table->string('profile_picture')->nullable();
             $table->text('bio')->nullable();
             $table->date('date_of_birth')->nullable();

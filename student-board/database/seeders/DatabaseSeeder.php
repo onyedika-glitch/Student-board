@@ -9,6 +9,7 @@ use Database\Seeders\EventSeeder;
 use Database\Seeders\CourseSeeder;
 use Database\Seeders\ResultSeeder;
 use Database\Seeders\TimetableSeeder;
+use Database\Seeders\AdminUserSeeder;
 
 
 
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
              CourseSeeder::class,
         TimetableSeeder::class,
         ResultSeeder::class,
+        AdminUserSeeder::class,
         
         ]);
     }

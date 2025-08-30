@@ -3,8 +3,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Announcement\{StoreAnnouncementRequest, UpdateAnnouncementRequest};
 use App\Models\Announcement;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AnnouncementController extends Controller {
+  use AuthorizesRequests;
   public function index(){ $announcements = Announcement::latest()->paginate(12); return view('announcements.index', compact('announcements')); }
   public function show(Announcement $announcement){ return view('announcements.show', compact('announcement')); }
   public function create(){ $this->authorize('create', Announcement::class); return view('announcements.form'); }

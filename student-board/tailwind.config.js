@@ -15,9 +15,12 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                primary: "#F97316", // orange
-                accent: "#FACC15",  // yellow
-                dark: "#0D0D0D",    // deep black
+                primary: "#FF9800",      // For bg-primary, border-primary
+                accent: "#FFD600",       // For text-accent, bg-accent
+                dark: "#111111",         // For bg-dark
+                neutral: {
+                    900: '#1a1a1a',        // For bg-neutral-900
+                },
             },
         },
     },

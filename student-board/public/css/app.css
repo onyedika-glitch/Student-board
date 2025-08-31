@@ -730,6 +730,9 @@ select {
     max-width: 1536px;
   }
 }
+@tailwind utilities;
+@import 'tailwindcss';
+@import 'tailwindcss/preflight';
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1860,6 +1863,29 @@ select {
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
+body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  overflow-x: hidden;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+
+  body {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+
+  body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
 
 /* Global background & text */
 body {

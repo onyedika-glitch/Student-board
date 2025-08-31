@@ -1,5 +1,8 @@
 # Stage 1: Build Composer dependencies
 FROM composer:2 AS vendor
+WORKDIR /app
+COPY . .
+RUN composer install --no-dev --optimize-autoloader
 
 # Stage 2: Build Node assets
 FROM node:18 AS nodebuild

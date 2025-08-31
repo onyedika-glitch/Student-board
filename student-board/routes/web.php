@@ -45,6 +45,11 @@ Route::get('/calendar', function () {
     return view('events.calendar');
 })->name('events.calendar');
 
+// routes/web.php
+Route::get('/academic-calendar', function () {
+    return view('calendar.academic');
+})->name('calendar.academic');
+
 
 /*
 |--------------------------------------------------------------------------

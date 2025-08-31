@@ -6,7 +6,7 @@
 
 <!-- 🌟 Hero Section -->
 <div class="relative bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 text-white rounded-2xl shadow-lg overflow-hidden mb-8">
-    <img src="https://images.unsplash.com/photo-1581090700227-4c4f7c0d47af?auto=format&fit=crop&w=1600&q=80"
+    <img src="{{ asset('images/students-learning.jpg') }}"
          class="absolute inset-0 w-full h-full object-cover opacity-30" alt="Campus">
     <div class="relative z-10 p-10 text-center">
         <h1 class="text-4xl font-extrabold">🎓 Welcome back, {{ Auth::user()->name ?? 'Student' }}!</h1>
@@ -70,6 +70,22 @@
         <a href="{{ route('results.index') }}" class="text-sm font-semibold hover:underline">View results →</a>
     </div>
     @endauth
+  <!-- Event Calendar -->
+    <div class="card bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+        <img src="https://img.icons8.com/color/96/planner.png" 
+             class="absolute right-3 top-3 w-16 opacity-20" alt="Event Calendar">
+        <h2 class="font-bold text-xl mb-4">📆 Event Calendar</h2>
+        <p class="opacity-80 mb-3">See all upcoming events in calendar view.</p>
+        <a href="{{ route('events.calendar') }}" class="text-sm font-semibold hover:underline">Open calendar →</a>
+    </div>
+    <!-- Academic Calendar -->
+<div class="card bg-gradient-to-r from-cyan-500 to-teal-600 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+    <img src="https://img.icons8.com/color/96/year-of-dragon.png" 
+         class="absolute right-3 top-3 w-16 opacity-20" alt="Academic Calendar">
+    <h2 class="font-bold text-xl mb-4">📚 Academic Calendar</h2>
+    <p class="opacity-80 mb-3">View academic calendars from 2020 to 2025.</p>
+    <a href="{{ route('calendar.academic') }}" class="text-sm font-semibold hover:underline">Open Academic Calendar →</a>
+</div>
 
 </div>
 @endsection

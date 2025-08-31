@@ -38,7 +38,7 @@
 
             <!-- Right: Hero Image -->
             <div class="mt-10 md:mt-0">
-                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80"
+                <img src="{{ asset('images/students-learning.jpg') }}"
                      alt="Students learning"
                      class="rounded-2xl shadow-2xl border-4 border-yellow-300">
             </div>

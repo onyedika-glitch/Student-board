@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100  sticky top-0 z-50">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100  sticky top-0 z-50 relative border-4 border-red-500">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -27,6 +27,13 @@
                     <x-nav-link :href="route('results.index')" :active="request()->routeIs('results.index')">
                         {{ __('Results') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('calendar.academic')" :active="request()->routeIs('calendar.academic')">
+    {{ __('Academic Calendar') }}
+</x-nav-link>
+<x-nav-link :href="route('events.calendar')" :active="request()->routeIs('events.calendar')">
+    {{ __('Calendar') }}
+</x-nav-link>
+
                 </div>
             </div>
 
@@ -107,6 +114,13 @@
             <x-responsive-nav-link :href="route('results.index')" :active="request()->routeIs('results.index')">
                 {{ __('Results') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('events.calendar')" :active="request()->routeIs('events.calendar')">
+    {{ __('Calendar') }}
+</x-responsive-nav-link>
+<x-responsive-nav-link :href="route('calendar.academic')" :active="request()->routeIs('calendar.academic')">
+    {{ __('Academic Calendar') }}
+</x-responsive-nav-link>
+
         </div>
 
         <!-- Responsive Settings Options -->

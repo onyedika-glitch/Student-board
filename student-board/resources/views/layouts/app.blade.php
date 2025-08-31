@@ -2652,6 +2652,7 @@ h1, h2, h3 {
 }
 
     </style>
+   <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen bg-gray-100">
@@ -2672,5 +2673,6 @@ h1, h2, h3 {
         </main>
         @include('partials.footer')
     </div>
+   
 </body>
 </html>

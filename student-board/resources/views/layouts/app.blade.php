@@ -4,7 +4,53 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Student Board') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+   body {
+  background-color: #18181b; /* Tailwind bg-dark */
+  color: #f3f4f6; /* Tailwind text-gray-100 */
+}
+
+/* Card style */
+.card {
+  background-color: #171717; /* Tailwind bg-neutral-900 */
+  border: 1px solid #2563eb; /* Tailwind border-primary */
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); /* Tailwind shadow-lg */
+  border-radius: 0.75rem;
+ } /* Tailwind rounded-xl */
+h1, h2, h3 {
+  color: #f59e42; /* Tailwind text-accent (replace with your accent color) */
+}
+/* Headings */
+h1, h2, h3 {
+color: #FFD600; /* Tailwind accent (yellow) */
+}
+.btn-primary {
+  background-color: #2563eb; /* Tailwind bg-primary */
+  color: #000000; /* Tailwind text-black */
+  font-weight: 600; /* Tailwind font-semibold */
+  border-radius: 0.5rem; /* Tailwind rounded-lg */
+  padding: 0.5rem 1rem; /* Tailwind px-4 py-2 */
+  transition: background-color 0.2s;
+}
+.btn-primary:hover {
+  background-color: #f59e42; /* Tailwind bg-accent (replace with your accent color) */
+}
+/* Buttons */
+.btn-primary {
+  background-color: #2563eb; /* Tailwind bg-primary */
+  color: #000000; /* Tailwind text-black */
+  font-weight: 600; /* Tailwind font-semibold */
+  border-radius: 0.5rem; /* Tailwind rounded-lg */
+  padding: 0.5rem 1rem; /* Tailwind px-4 py-2 */
+  transition: background-color 0.2s;
+}
+.btn-primary:hover {
+  background-color: #f59e42; /* Tailwind bg-accent (replace with your accent color) */
+}
+a {
+  color: #2563eb; /* Tailwind text-primary */
+  text-decoration: none;}
+    </style>
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen bg-gray-100">

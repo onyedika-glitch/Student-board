@@ -19,12 +19,12 @@ class AnnouncementController extends Controller {
 {
     $query = Announcement::query();
 
-    // ✅ Search by title only
+   
     if ($request->filled('search')) {
         $query->where('title', 'like', '%' . $request->search . '%');
     }
 
-    // ✅ Past announcements only (by created_at)
+    
     $announcements = $query->whereDate('created_at', '<', now())
                           ->orderBy('created_at', 'desc')
                           ->paginate(10);

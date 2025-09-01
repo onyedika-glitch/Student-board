@@ -45,8 +45,6 @@ Route::get('/archive-announcements', [AnnouncementController::class, 'archive'])
 Route::get('/announcements/archive', [App\Http\Controllers\Web\AnnouncementController::class, 'archive'])
     ->name('announcements.archive');
 
-Route::get('/announcements/search', [AnnouncementController::class, 'search'])
-     ->name('announcements.search');
 
 
 

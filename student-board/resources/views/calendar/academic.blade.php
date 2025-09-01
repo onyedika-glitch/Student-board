@@ -18,9 +18,9 @@
     </div>
 
     <!-- Calendar Display -->
-    <div id="calendar-display" class="text-center hidden">
-        <h2 id="calendar-title" class="text-xl font-semibold mb-4"></h2>
-        <img id="calendar-image" src="" alt="Academic Calendar" class="rounded-lg shadow-lg mx-auto">
+    <div id="calendar-display" class="text-center">
+        <h2 id="calendar-title" class="text-xl font-semibold mb-4">Academic Calendar - 2025</h2>
+        <img id="calendar-image" src="/images/academic/2025.png" alt="Academic Calendar" class="rounded-lg shadow-lg mx-auto">
     </div>
 </div>
 
@@ -33,22 +33,21 @@
 
         // Predefined academic calendar images per year
         const calendarImages = {
-            2020: "{{ asset('images/academic/2020.png') }}",
-            2021: "{{ asset('images/academic/2021.png') }}",
-            2022: "{{ asset('images/academic/2022.png') }}",
-            2023: "{{ asset('images/academic/2023.png') }}",
-            2024: "{{ asset('images/academic/2024.png') }}",
-            2025: "{{ asset('images/academic/2025.png') }}",
+            2020: "/images/academic/2020.png",
+            2021: "/images/academic/2021.png",
+            2022: "/images/academic/2022.png",
+            2023: "/images/academic/2023.png",
+            2024: "/images/academic/2024.png",
+            2025: "/images/academic/2025.png",
         };
 
+        // Handle change event
         yearSelect.addEventListener("change", function () {
             const selectedYear = this.value;
             if (calendarImages[selectedYear]) {
                 calendarDisplay.classList.remove("hidden");
                 calendarImage.src = calendarImages[selectedYear];
                 calendarTitle.innerText = `Academic Calendar - ${selectedYear}`;
-            } else {
-                calendarDisplay.classList.add("hidden");
             }
         });
     });

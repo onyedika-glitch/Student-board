@@ -41,6 +41,15 @@ Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->
 Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
 Route::get('/events/archive', [EventController::class, 'archive'])->name('events.archive');
 Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
+Route::get('/archive-announcements', [AnnouncementController::class, 'archive'])->name('announcements.archive');
+Route::get('/announcements/archive', [App\Http\Controllers\Web\AnnouncementController::class, 'archive'])
+    ->name('announcements.archive');
+
+Route::get('/announcements/search', [AnnouncementController::class, 'search'])
+     ->name('announcements.search');
+
+
+
 // Calendar UI page
 Route::get('/calendar', function () {
     return view('events.calendar');

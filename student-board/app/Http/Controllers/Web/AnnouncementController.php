@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Announcement\{StoreAnnouncementRequest, UpdateAnnouncementRequest};
 use App\Models\Announcement;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller {
   use AuthorizesRequests;
@@ -14,4 +15,21 @@ class AnnouncementController extends Controller {
   public function edit(Announcement $announcement){ $this->authorize('update',$announcement); return view('announcements.form', compact('announcement')); }
   public function update(UpdateAnnouncementRequest $r, Announcement $announcement){ $this->authorize('update',$announcement); $announcement->update($r->validated()); return back()->with('success','Updated'); }
   public function destroy(Announcement $announcement){ $this->authorize('delete',$announcement); $announcement->delete(); return back()->with('success','Deleted'); }
+  public function archive(Request $request)
+{
+    $query = Announcement::query();
+
+    // ✅ Search by title only
+    if ($request->filled('search')) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+    }
+
+    // ✅ Past announcements only (by created_at)
+    $announcements = $query->whereDate('created_at', '<', now())
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(10);
+
+    return view('announcements.archive', compact('announcements'));
+}
+
 }

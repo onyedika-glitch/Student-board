@@ -10,6 +10,7 @@ use Database\Seeders\CourseSeeder;
 use Database\Seeders\ResultSeeder;
 use Database\Seeders\TimetableSeeder;
 use Database\Seeders\AdminUserSeeder;
+use Database\Seeders\OldEventsSeeder;
 
 
 
@@ -20,11 +21,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create a default user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+       
 
         // Call your other seeders
         $this->call([
@@ -34,6 +31,8 @@ class DatabaseSeeder extends Seeder
         TimetableSeeder::class,
         ResultSeeder::class,
         AdminUserSeeder::class,
+        OldEventsSeeder::class,
+
         
         ]);
     }

@@ -6,7 +6,7 @@
 
 <!-- 🌟 Hero Section -->
 <div class="relative bg-gradient-to-r from-orange-500 via-yellow-500 to-red-500 text-white rounded-2xl shadow-lg overflow-hidden mb-8">
-    <img src="{{ asset('images/students-learning.jpg') }}"
+ <img src="/images/campus.jpg"
          class="absolute inset-0 w-full h-full object-cover opacity-30" alt="Campus">
     <div class="relative z-10 p-10 text-center">
         <h1 class="text-4xl font-extrabold">🎓 Welcome back, {{ Auth::user()->name ?? 'Student' }}!</h1>

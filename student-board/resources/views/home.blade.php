@@ -38,7 +38,7 @@
 
             <!-- Right: Hero Image -->
             <div class="mt-10 md:mt-0">
-                <img src="{{ asset('images/students-learning.jpg') }}"
+                <img src="/images/students-learning.jpg"
                      alt="Students learning"
                      class="rounded-2xl shadow-2xl border-4 border-yellow-300">
             </div>

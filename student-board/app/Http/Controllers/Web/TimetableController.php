@@ -13,8 +13,8 @@ class TimetableController extends Controller {
     public function index()
     {
         if (auth()->check()) {
-            $timetables = Timetable::where('type', auth()->user()->type)
-                ->latest()
+            $timetables = Timetable::
+                latest()
                 ->paginate(20);
         } else {
             $timetables = Timetable::latest()->paginate(20);

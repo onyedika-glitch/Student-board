@@ -39,7 +39,8 @@ Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->
 
 // JSON feed for calendar
 Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
-
+Route::get('/events/archive', [EventController::class, 'archive'])->name('events.archive');
+Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
 // Calendar UI page
 Route::get('/calendar', function () {
     return view('events.calendar');
@@ -49,6 +50,10 @@ Route::get('/calendar', function () {
 Route::get('/academic-calendar', function () {
     return view('calendar.academic');
 })->name('calendar.academic');
+
+// Events archive route
+
+
 
 
 /*

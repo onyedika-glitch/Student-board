@@ -24,5 +24,13 @@
     @else
         <p class="text-gray-500">No events scheduled.</p>
     @endif
+    <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Upcoming Events</h1>
+    <a href="{{ route('events.archive') }}" 
+       class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
+        View Archive →
+    </a>
+</div>
+
 </div>
 @endsection

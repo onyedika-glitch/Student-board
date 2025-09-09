@@ -25,12 +25,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Announcements
 Route::get('/announcements/archive', [AnnouncementController::class, 'archive'])
     ->name('announcements.archive');
-    
+
 Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
 
 // Events
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
+Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
 
 // Timetables
@@ -42,9 +44,7 @@ Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->
 
 
 // JSON feed for calendar
-Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
-Route::get('/events/archive', [EventController::class, 'archive'])->name('events.archive');
-Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
+
 
 
 Route::middleware(['auth'])->group(function () {

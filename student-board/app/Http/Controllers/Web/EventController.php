@@ -46,16 +46,20 @@ class EventController extends Controller {
         return back()->with('success','Deleted');
     }
 
-    public function feed() {
-        $events = Event::all([
-            'id',
-            'title',
-            'start_date as start',
-            'end_date as end'
-        ]);
+   public function feed()
+{
+    $events = Event::all()->map(function ($event) {
+        return [
+            'id'    => $event->id,
+            'title' => $event->title,
+            'start' => \Carbon\Carbon::parse($event->start_date)->toIso8601String(),
+            'end'   => $event->end_date ? \Carbon\Carbon::parse($event->end_date)->toIso8601String() : null,
+        ];
+    });
 
-        return response()->json($events);
-    }
+    return response()->json($events);
+}
+
 
     /**
      * 📜 Show archived (past) events with search filter

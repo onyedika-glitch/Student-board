@@ -15,19 +15,20 @@ class AnnouncementController extends Controller {
   public function edit(Announcement $announcement){ $this->authorize('update',$announcement); return view('announcements.form', compact('announcement')); }
   public function update(UpdateAnnouncementRequest $r, Announcement $announcement){ $this->authorize('update',$announcement); $announcement->update($r->validated()); return back()->with('success','Updated'); }
   public function destroy(Announcement $announcement){ $this->authorize('delete',$announcement); $announcement->delete(); return back()->with('success','Deleted'); }
+
   public function archive(Request $request)
 {
     $query = Announcement::query();
 
-   
+    // ✅ Search only by title
     if ($request->filled('search')) {
         $query->where('title', 'like', '%' . $request->search . '%');
     }
 
-    
+    // ✅ Past events only (change created_at if your column is named differently, e.g. date)
     $announcements = $query->whereDate('created_at', '<', now())
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(10);
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
 
     return view('announcements.archive', compact('announcements'));
 }

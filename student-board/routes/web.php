@@ -10,6 +10,7 @@ use App\Http\Controllers\Web\{
     UserController,
     ProfileController,
     DashboardController,
+    NotificationController,
 };
 use App\Http\Controllers\Admin\AdminDashboardController;
 /*
@@ -22,6 +23,9 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Announcements
+Route::get('/announcements/archive', [AnnouncementController::class, 'archive'])
+    ->name('announcements.archive');
+    
 Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
 
@@ -41,10 +45,15 @@ Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->
 Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
 Route::get('/events/archive', [EventController::class, 'archive'])->name('events.archive');
 Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
-Route::get('/archive-announcements', [AnnouncementController::class, 'archive'])->name('announcements.archive');
-Route::get('/announcements/archive', [App\Http\Controllers\Web\AnnouncementController::class, 'archive'])
-    ->name('announcements.archive');
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::delete('/notifications/{notification}/archive', [NotificationController::class, 'archive'])->name('notifications.archive');
+});
+
+Route::get('/results', [ResultController::class, 'index'])->name('results.index');
 
 
 
@@ -113,4 +122,4 @@ Route::middleware(['auth','admin'])
 | Installed automatically by Breeze.
 |
 */
-require __DIR__.'/auth.php';  
+require __DIR__.'/auth.php';

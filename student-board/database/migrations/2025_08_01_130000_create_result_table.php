@@ -10,17 +10,22 @@ return new class extends Migration {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
 
-            // Foreign key to users (students)
-            $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
+            // 🔑 Who the result belongs to
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
 
-            // Foreign key to courses
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            // 🔑 Course reference
+            $table->foreignId('course_id')->constrained('courses')->cascadeOnDelete();
 
+            // 📚 Academic info
+            $table->string('session');   // e.g. 2023/2024
+            $table->string('semester');  // e.g. First / Second
+
+            // 🎯 Performance
             $table->integer('score');
-            $table->string('grade', 2);
+            $table->string('grade');
 
-            // Who uploaded (usually an admin/lecturer)
-            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
+            // 🔑 Who uploaded it
+            $table->foreignId('uploaded_by')->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();
         });

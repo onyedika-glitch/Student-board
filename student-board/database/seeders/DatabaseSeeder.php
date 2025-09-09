@@ -11,6 +11,9 @@ use Database\Seeders\ResultSeeder;
 use Database\Seeders\TimetableSeeder;
 use Database\Seeders\AdminUserSeeder;
 use Database\Seeders\OldEventsSeeder;
+use Database\Seeders\NotificationSeeder;
+use Database\Seeders\OldAnnouncementsSeeder;
+
 
 
 
@@ -21,7 +24,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-       
+
 
         // Call your other seeders
         $this->call([
@@ -32,8 +35,10 @@ class DatabaseSeeder extends Seeder
         ResultSeeder::class,
         AdminUserSeeder::class,
         OldEventsSeeder::class,
+        NotificationSeeder::class,
+        OldAnnouncementsSeeder::class,
 
-        
+
         ]);
     }
 }

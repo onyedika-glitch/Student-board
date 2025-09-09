@@ -6,11 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 class Result extends Model
 {
     protected $fillable = [
-        'student_id',
-        'course_id',   // <-- add this
-        'score',
-        'grade',
-        'uploaded_by'
+        'student_id', 'course_id', 'session', 'semester',
+        'score', 'grade', 'uploaded_by'
     ];
 
     public function course()

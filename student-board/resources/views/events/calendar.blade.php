@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        timeZone: 'local',   // 👈 Force local timezone
+        timeZone: 'local',
+        locale: 'en-gb',
+        
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',

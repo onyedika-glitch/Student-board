@@ -19,13 +19,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        timeZone: 'local',
+        timeZone: 'local',   // 👈 Force local timezone
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
-        events: '{{ route("events.feed") }}', // JSON feed
+        events: "{{ url('/events/feed') }}",   // 👈 Use absolute URL instead of route()
+
+        eventDidMount: function(info) {
+            console.log("Loaded event:", info.event.title, info.event.startStr);
+        },
+
         eventClick: function(info) {
             alert("Event: " + info.event.title + "\nStarts: " + info.event.start);
         }

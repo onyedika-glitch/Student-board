@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
         initialView: 'dayGridMonth',
         timeZone: 'local',
         locale: 'en-gb',
-        
+
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
-        events: "{{ url('/events/feed') }}",   // 👈 Use absolute URL instead of route()
+        events: "{{ secure_url('/events/feed') }}",   // 👈 Use absolute URL instead of route()
 
         eventDidMount: function(info) {
             console.log("Loaded event:", info.event.title, info.event.startStr);

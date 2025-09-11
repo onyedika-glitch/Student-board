@@ -10,43 +10,48 @@ class NotificationSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first(); 
-
         $notifications = [
             [
-                'recipient_id' => $user->id,
                 'message' => 'New announcement: Library Renovation starts next week.',
-                'status' => 'unread',
-                'type' => 'announcement',
+                'status'  => 'unread',
+                'type'    => 'announcement',
             ],
             [
-                'recipient_id' => $user->id,
                 'message' => 'Event Reminder: Freshers Orientation tomorrow at 10 AM.',
-                'status' => 'unread',
-                'type' => 'event',
+                'status'  => 'unread',
+                'type'    => 'event',
             ],
             [
-                'recipient_id' => $user->id,
                 'message' => 'Exam Timetable has been updated.',
-                'status' => 'read',
-                'type' => 'announcement',
+                'status'  => 'read',
+                'type'    => 'announcement',
             ],
             [
-                'recipient_id' => $user->id,
                 'message' => 'Don’t miss the Career Fair next Monday.',
-                'status' => 'unread',
-                'type' => 'event',
+                'status'  => 'unread',
+                'type'    => 'event',
             ],
             [
-                'recipient_id' => $user->id,
                 'message' => 'Semester results have been released.',
-                'status' => 'read',
-                'type' => 'announcement',
+                'status'  => 'read',
+                'type'    => 'announcement',
             ],
         ];
 
-        foreach ($notifications as $note) {
-            Notification::create($note);
+        // Loop through all users and assign notifications
+        $users = User::all();
+
+        foreach ($users as $user) {
+            foreach ($notifications as $note) {
+                Notification::create([
+                    'recipient_id' => $user->id,
+                    'message'      => $note['message'],
+                    'status'       => $note['status'],
+                    'type'         => $note['type'],
+                ]);
+            }
         }
+
+        $this->command->info("✅ Notifications seeded for all users (". $users->count() ." users).");
     }
 }

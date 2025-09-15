@@ -17,10 +17,46 @@
         </div>
     </div>
 
-    <!-- Update Name/Email -->
+    <!-- Update Name/Email + Custom Fields -->
     <div class="bg-white shadow rounded-lg p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4">Update Information</h2>
-        @include('profile.partials.update-profile-information-form')
+        <form method="POST" action="{{ route('profile.update') }}">
+            @csrf
+            @method('PUT')
+
+            <!-- Include Jetstream’s default name/email form -->
+            @include('profile.partials.update-profile-information-form')
+
+            <!-- Matric Number -->
+            <div class="mt-4">
+                <x-input-label for="matric_number" :value="__('Matric Number')" />
+                <x-text-input id="matric_number" name="matric_number" type="text" class="mt-1 block w-full"
+                    :value="old('matric_number', $user->matric_number)" required />
+                <x-input-error :messages="$errors->get('matric_number')" class="mt-2" />
+            </div>
+
+            <!-- Department -->
+            <div class="mt-4">
+                <x-input-label for="department" :value="__('Department')" />
+                <x-text-input id="department" name="department" type="text" class="mt-1 block w-full"
+                    :value="old('department', $user->department)" required />
+                <x-input-error :messages="$errors->get('department')" class="mt-2" />
+            </div>
+
+            <!-- Phone -->
+            <div class="mt-4">
+                <x-input-label for="phone" :value="__('Phone')" />
+                <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full"
+                    :value="old('phone', $user->phone)" required />
+                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+            </div>
+
+            <div class="mt-6">
+                <x-primary-button>
+                    {{ __('Save Changes') }}
+                </x-primary-button>
+            </div>
+        </form>
     </div>
 
     <!-- Update Password -->
@@ -35,28 +71,4 @@
         @include('profile.partials.delete-user-form')
     </div>
 </div>
-<!-- Matric Number -->
-<div class="mt-4">
-    <x-input-label for="matric_number" :value="__('Matric Number')" />
-    <x-text-input id="matric_number" name="matric_number" type="text" class="mt-1 block w-full"
-        :value="old('matric_number', $user->matric_number)" required />
-    <x-input-error :messages="$errors->get('matric_number')" class="mt-2" />
-</div>
-
-<!-- Department -->
-<div class="mt-4">
-    <x-input-label for="department" :value="__('Department')" />
-    <x-text-input id="department" name="department" type="text" class="mt-1 block w-full"
-        :value="old('department', $user->department)" required />
-    <x-input-error :messages="$errors->get('department')" class="mt-2" />
-</div>
-
-<!-- Phone -->
-<div class="mt-4">
-    <x-input-label for="phone" :value="__('Phone')" />
-    <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full"
-        :value="old('phone', $user->phone)" required />
-    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-</div>
-
 @endsection

@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{ config('app.name', 'Student Board') }}</title>
-    
+
     <!-- Styles -->
     <style>
     *, ::before, ::after {
@@ -2671,7 +2673,7 @@ h1, h2, h3 {
     <a href="{{ route('notifications.index') }}" class="relative">
         <!-- Bell Icon -->
         <svg class="w-6 h-6 text-gray-700 hover:text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
         </svg>
 
@@ -2690,13 +2692,129 @@ h1, h2, h3 {
 </div>
 @endauth
 
+<!-- Floating AI Button -->
+<button id="chat-toggle" class="fixed right-6 bottom-6 w-16 h-16 bg-orange-500 text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:scale-110 transition transform z-50">
+  🤖
+</button>
+
+<!-- Chat Widget -->
+<div id="chat-widget" class="fixed right-6 bottom-24 w-96 max-w-full hidden bg-white shadow-xl rounded-2xl overflow-hidden z-50">
+  <!-- Header -->
+  <div class="p-4 bg-orange-500 text-white font-bold flex items-center justify-between">
+    <span class="flex items-center gap-2">
+      🤖 AI Assistant
+    </span>
+    <button id="chat-close" class="text-white text-xl">✕</button>
+  </div>
+
+  <!-- Messages -->
+  <div id="chat-messages" class="p-4 h-80 overflow-y-auto bg-gray-50 text-sm"></div>
+
+  <!-- Input -->
+  <form id="chat-form" class="flex p-3 gap-2 border-t">
+    <input id="chat-input" type="text" placeholder="Ask about timetables, events, results..."
+      class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-orange-400" />
+    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+      Send
+    </button>
+  </form>
+</div>
+
+<style>
+  /* Chat bubble styling */
+  .chat-bubble {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: inline-block;
+    word-wrap: break-word;
+  }
+  .chat-user {
+    background-color: #f97316; /* Orange */
+    color: white;
+    border-bottom-right-radius: 2px;
+  }
+  .chat-assistant {
+    background-color: #e5e7eb; /* Gray */
+    color: #111827;
+    border-bottom-left-radius: 2px;
+  }
+</style>
+
+<script>
+(function(){
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  const messages = document.getElementById('chat-messages');
+  const widget = document.getElementById('chat-widget');
+  const toggle = document.getElementById('chat-toggle');
+  const close = document.getElementById('chat-close');
+
+  // Restore open state
+  if (localStorage.getItem('chatOpen') === 'true') {
+    widget.classList.remove('hidden');
+  }
+
+  // Toggle open
+  toggle.addEventListener('click', () => {
+    widget.classList.toggle('hidden');
+    localStorage.setItem('chatOpen', !widget.classList.contains('hidden'));
+  });
+
+  // Close
+  close.addEventListener('click', () => {
+    widget.classList.add('hidden');
+    localStorage.setItem('chatOpen', 'false');
+  });
+
+  // Append messages
+  function appendMessage(who, text) {
+    const el = document.createElement('div');
+    el.className = who === 'user' ? 'text-right' : 'text-left';
+    el.innerHTML = `<div class="chat-bubble ${who==='user' ? 'chat-user' : 'chat-assistant'}">${text}</div>`;
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // Handle send
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    appendMessage('user', text);
+    input.value = '';
+    appendMessage('assistant', '…');
+
+    try {
+      const res = await fetch("{{ route('chat.chat') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      messages.lastChild.remove();
+      appendMessage('assistant', data.reply ?? 'Sorry, something went wrong.');
+    } catch(err) {
+      messages.lastChild.remove();
+      appendMessage('assistant', '⚠️ Network error.');
+      console.error(err);
+    }
+  });
+})();
+</script>
+
+
         <!-- Page Content -->
         <main>
             @yield('content')
         </main>
-        
+
         @include('partials.footer')
     </div>
-   
+
 </body>
 </html>

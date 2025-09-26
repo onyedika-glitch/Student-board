@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\{
     ProfileController,
     DashboardController,
     NotificationController,
+    ChatController,
 };
 use App\Http\Controllers\Admin\AdminDashboardController;
 /*
@@ -42,6 +43,7 @@ Route::get('/timetables', [TimetableController::class, 'index'])->name('timetabl
 // Results (students must log in to see their results)
 Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->name('results.index');
 
+Route::post('/chat', [ChatController::class, 'chat'])->name('chat.chat');
 
 // JSON feed for calendar
 

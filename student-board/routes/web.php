@@ -24,21 +24,25 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Announcements
+Route::middleware(['auth'])->group(function () {
 Route::get('/announcements/archive', [AnnouncementController::class, 'archive'])
     ->name('announcements.archive');
 
 Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
-
+});
 // Events
+Route::middleware(['auth'])->group(function () {
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/feed', [EventController::class, 'feed'])->name('events.feed');
 Route::get('/archive-events', [EventController::class, 'archive'])->name('events.archive');
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+});
 
+Route::middleware(['auth'])->group(function () {
 // Timetables
 Route::get('/timetables', [TimetableController::class, 'index'])->name('timetables.index');
-
+});
 
 // Results (students must log in to see their results)
 Route::middleware('auth')->get('/results', [ResultController::class, 'index'])->name('results.index');
@@ -55,8 +59,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/notifications/{notification}/archive', [NotificationController::class, 'archive'])->name('notifications.archive');
 });
 
+Route::middleware(['auth'])->group(function () {
 Route::get('/results', [ResultController::class, 'index'])->name('results.index');
-
+});
 
 
 // Calendar UI page
@@ -65,10 +70,11 @@ Route::get('/calendar', function () {
 })->name('events.calendar');
 
 // routes/web.php
+Route::middleware(['auth'])->group(function () {
 Route::get('/academic-calendar', function () {
     return view('calendar.academic');
 })->name('calendar.academic');
-
+});
 // Events archive route
 
 

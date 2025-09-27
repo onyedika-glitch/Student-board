@@ -2787,7 +2787,7 @@ h1, h2, h3 {
     appendMessage('assistant', '…');
 
     try {
-      const res = await fetch("{{ route('chat.chat') }}", {
+      const res = await fetch('/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

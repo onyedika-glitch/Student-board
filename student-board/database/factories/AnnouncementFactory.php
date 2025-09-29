@@ -37,7 +37,6 @@ class AnnouncementFactory extends Factory
             'category'    => $this->faker->randomElement(['Academic', 'Exams', 'General', 'Hostel']),
             'visible_from'=> $this->faker->dateTimeBetween('-1 month', '+1 month'),
             'visible_to'  => $this->faker->dateTimeBetween('+1 month', '+3 months'),
-            'posted_by'   => User::inRandomOrder()->first()?->id ?? 1,
         ];
     }
 }

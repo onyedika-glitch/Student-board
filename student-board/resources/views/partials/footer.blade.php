@@ -1,6 +1,6 @@
 <footer class="bg-gray-900 text-gray-400 text-sm">
     <div class="max-w-7xl mx-auto px-6 py-8 grid gap-6 md:grid-cols-3">
-        
+
         <!-- Brand / About -->
         <div>
             <h2 class="text-lg font-bold flex items-center gap-2 text-yellow-400">

@@ -60,7 +60,6 @@ class EventSeeder extends Seeder
                 'description' => $event['description'],
                 'start_date'  => $event['start_date'],
                 'end_date'    => $event['end_date'],
-                'posted_by'   => 1, // Change if you want dynamic uploader
             ]);
             Event::factory()->count(10)->create();
         }

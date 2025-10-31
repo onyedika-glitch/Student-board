@@ -39,7 +39,6 @@ class EventFactory extends Factory
             'description' => $this->faker->randomElement($descriptions),
             'start_date'  => $start,
             'end_date'    => $end,
-            'posted_by'   => User::inRandomOrder()->first()?->id ?? 1,
         ];
     }
 }

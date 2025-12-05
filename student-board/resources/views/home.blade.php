@@ -4,7 +4,7 @@
 @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-r from-black via-orange-600 to-yellow-500 text-white">
+    <section class="relative bg-orange-500 text-white">
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-20">
             
             <!-- Left: Text -->

@@ -13,7 +13,8 @@ env.production
 /.zed
 /auth.json
 /node_modules
-/public/hot
+/public
+/hot
 /storage/*.key
 /storage/pail
 Homestead.json

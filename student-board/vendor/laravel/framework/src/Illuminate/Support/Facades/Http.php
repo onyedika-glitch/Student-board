@@ -71,13 +71,14 @@ use Illuminate\Http\Client\Factory;
  * @method static \Illuminate\Http\Client\PendingRequest throwUnless(callable|bool $condition)
  * @method static \Illuminate\Http\Client\PendingRequest dump()
  * @method static \Illuminate\Http\Client\PendingRequest dd()
- * @method static \Illuminate\Http\Client\Response get(string $url, array|string|null $query = null)
- * @method static \Illuminate\Http\Client\Response head(string $url, array|string|null $query = null)
- * @method static \Illuminate\Http\Client\Response post(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
- * @method static \Illuminate\Http\Client\Response patch(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
- * @method static \Illuminate\Http\Client\Response put(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
- * @method static \Illuminate\Http\Client\Response delete(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
- * @method static array pool(callable $callback)
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface get(string $url, array|string|null $query = null)
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface head(string $url, array|string|null $query = null)
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface post(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface patch(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface put(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+ * @method static \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface delete(string $url, array|\JsonSerializable|\Illuminate\Contracts\Support\Arrayable $data = [])
+ * @method static array pool(callable $callback, int|null $concurrency = null)
+ * @method static \Illuminate\Http\Client\Batch batch(callable $callback)
  * @method static \Illuminate\Http\Client\Response send(string $method, string $url, array $options = [])
  * @method static \GuzzleHttp\Client buildClient()
  * @method static \GuzzleHttp\Client createClient(\GuzzleHttp\HandlerStack $handlerStack)
@@ -117,7 +118,7 @@ class Http extends Facade
     /**
      * Register a stub callable that will intercept requests and be able to return stub responses.
      *
-     * @param  \Closure|array  $callback
+     * @param  \Closure|array|null  $callback
      * @return \Illuminate\Http\Client\Factory
      */
     public static function fake($callback = null)

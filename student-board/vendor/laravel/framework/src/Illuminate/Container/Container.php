@@ -12,19 +12,20 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Contracts\Container\ContextualAttribute;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Container\SelfBuilding;
+use Illuminate\Support\Traits\ReflectsClosures;
 use LogicException;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
-use ReflectionIntersectionType;
 use ReflectionParameter;
-use ReflectionUnionType;
 use TypeError;
 
 class Container implements ArrayAccess, ContainerContract
 {
+    use ReflectsClosures;
+
     /**
      * The current globally available container (if any).
      *
@@ -568,35 +569,6 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
-     * Get the class names / types of the return type of the given Closure.
-     *
-     * @param  \Closure  $closure
-     * @return list<class-string>
-     *
-     * @throws \ReflectionException
-     */
-    protected function closureReturnTypes(Closure $closure)
-    {
-        $reflection = new ReflectionFunction($closure);
-
-        if ($reflection->getReturnType() === null ||
-            $reflection->getReturnType() instanceof ReflectionIntersectionType) {
-            return [];
-        }
-
-        $types = $reflection->getReturnType() instanceof ReflectionUnionType
-            ? $reflection->getReturnType()->getTypes()
-            : [$reflection->getReturnType()];
-
-        return (new Collection($types))
-            ->reject(fn ($type) => $type->isBuiltin())
-            ->reject(fn ($type) => in_array($type->getName(), ['static', 'self']))
-            ->map(fn ($type) => $type->getName())
-            ->values()
-            ->all();
-    }
-
-    /**
      * "Extend" an abstract type in the container.
      *
      * @param  string  $abstract
@@ -676,7 +648,7 @@ class Container implements ArrayAccess, ContainerContract
      * Assign a set of tags to a given binding.
      *
      * @param  array|string  $abstracts
-     * @param  array|mixed  ...$tags
+     * @param  mixed  ...$tags
      * @return void
      */
     public function tag($abstracts, $tags)
@@ -1169,6 +1141,11 @@ class Container implements ArrayAccess, ContainerContract
             return $this->notInstantiable($concrete);
         }
 
+        if (is_a($concrete, SelfBuilding::class, true) &&
+            ! in_array($concrete, $this->buildStack, true)) {
+            return $this->buildSelfBuildingInstance($concrete, $reflector);
+        }
+
         $this->buildStack[] = $concrete;
 
         $constructor = $reflector->getConstructor();
@@ -1203,6 +1180,34 @@ class Container implements ArrayAccess, ContainerContract
 
         $this->fireAfterResolvingAttributeCallbacks(
             $reflector->getAttributes(), $instance = $reflector->newInstanceArgs($instances)
+        );
+
+        return $instance;
+    }
+
+    /**
+     * Instantiate a concrete instance of the given self building type.
+     *
+     * @param  \Closure(static, array): TClass|class-string<TClass>  $concrete
+     * @param  \ReflectionClass  $reflector
+     * @return TClass
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function buildSelfBuildingInstance($concrete, $reflector)
+    {
+        if (! method_exists($concrete, 'newInstance')) {
+            throw new BindingResolutionException("No newInstance method exists for [$concrete].");
+        }
+
+        $this->buildStack[] = $concrete;
+
+        $instance = $this->call([$concrete, 'newInstance']);
+
+        array_pop($this->buildStack);
+
+        $this->fireAfterResolvingAttributeCallbacks(
+            $reflector->getAttributes(), $instance
         );
 
         return $instance;
@@ -1286,7 +1291,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getLastParameterOverride()
     {
-        return count($this->with) ? end($this->with) : [];
+        return count($this->with) ? array_last($this->with) : [];
     }
 
     /**
@@ -1646,7 +1651,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function currentlyResolving()
     {
-        return end($this->buildStack) ?: null;
+        return array_last($this->buildStack) ?: null;
     }
 
     /**

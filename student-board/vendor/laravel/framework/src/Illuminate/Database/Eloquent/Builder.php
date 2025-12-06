@@ -26,9 +26,9 @@ use ReflectionMethod;
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  *
- * @property-read HigherOrderBuilderProxy $orWhere
- * @property-read HigherOrderBuilderProxy $whereNot
- * @property-read HigherOrderBuilderProxy $orWhereNot
+ * @property-read HigherOrderBuilderProxy|$this $orWhere
+ * @property-read HigherOrderBuilderProxy|$this $whereNot
+ * @property-read HigherOrderBuilderProxy|$this $orWhereNot
  *
  * @mixin \Illuminate\Database\Query\Builder
  */
@@ -238,6 +238,21 @@ class Builder implements BuilderContract
         foreach ($scopes as $scope) {
             $this->withoutGlobalScope($scope);
         }
+
+        return $this;
+    }
+
+    /**
+     * Remove all global scopes except the given scopes.
+     *
+     * @param  array  $scopes
+     * @return $this
+     */
+    public function withoutGlobalScopesExcept(array $scopes = [])
+    {
+        $this->withoutGlobalScopes(
+            array_diff(array_keys($this->scopes), $scopes)
+        );
 
         return $this;
     }
@@ -507,7 +522,7 @@ class Builder implements BuilderContract
             return [];
         }
 
-        if (! is_array(reset($values))) {
+        if (! is_array(array_first($values))) {
             $values = [$values];
         }
 
@@ -1265,12 +1280,12 @@ class Builder implements BuilderContract
             return 0;
         }
 
-        if (! is_array(reset($values))) {
+        if (! is_array(array_first($values))) {
             $values = [$values];
         }
 
         if (is_null($update)) {
-            $update = array_keys(reset($values));
+            $update = array_keys(array_first($values));
         }
 
         return $this->toBase()->upsert(
@@ -1366,7 +1381,7 @@ class Builder implements BuilderContract
 
         $segments = preg_split('/\s+as\s+/i', $this->query->from);
 
-        $qualifiedColumn = end($segments).'.'.$column;
+        $qualifiedColumn = array_last($segments).'.'.$column;
 
         $values[$qualifiedColumn] = Arr::get($values, $qualifiedColumn, $values[$column]);
 

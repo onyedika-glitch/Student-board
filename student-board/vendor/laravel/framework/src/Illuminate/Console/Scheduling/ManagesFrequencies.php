@@ -501,7 +501,7 @@ trait ManagesFrequencies
     /**
      * Schedule the event to run weekly on a given day and time.
      *
-     * @param  array|mixed  $dayOfWeek
+     * @param  mixed  $dayOfWeek
      * @param  string  $time
      * @return $this
      */
@@ -569,6 +569,21 @@ trait ManagesFrequencies
     }
 
     /**
+     * Schedule the event to run on specific days of the month.
+     *
+     * @param  array<int<1, 31>>|int<1, 31>  ...$days
+     * @return $this
+     */
+    public function daysOfMonth(...$days)
+    {
+        $days = count($days) === 1 && is_array($days[0]) ? $days[0] : $days;
+
+        $this->dailyAt('0:0');
+
+        return $this->spliceIntoPosition(3, implode(',', $days));
+    }
+
+    /**
      * Schedule the event to run quarterly.
      *
      * @return $this
@@ -628,7 +643,7 @@ trait ManagesFrequencies
     /**
      * Set the days of the week the command should run on.
      *
-     * @param  array|mixed  $days
+     * @param  mixed  $days
      * @return $this
      */
     public function days($days)
@@ -655,7 +670,7 @@ trait ManagesFrequencies
      * Splice the given value into the given position of the expression.
      *
      * @param  int  $position
-     * @param  string  $value
+     * @param  string|int  $value
      * @return $this
      */
     protected function spliceIntoPosition($position, $value)

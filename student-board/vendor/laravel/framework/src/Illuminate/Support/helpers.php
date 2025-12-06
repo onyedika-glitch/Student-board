@@ -13,15 +13,15 @@ use Illuminate\Support\Optional;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable as SupportStringable;
+use Illuminate\Support\Traits\ReflectsClosures;
 
 if (! function_exists('append_config')) {
     /**
      * Assign high numeric IDs to a config item to force appending.
      *
      * @param  array  $array
-     * @return array
      */
-    function append_config(array $array)
+    function append_config(array $array): array
     {
         $start = 9999;
 
@@ -46,9 +46,8 @@ if (! function_exists('blank')) {
      * @phpstan-assert-if-true !=numeric|bool $value
      *
      * @param  mixed  $value
-     * @return bool
      */
-    function blank($value)
+    function blank($value): bool
     {
         if (is_null($value)) {
             return true;
@@ -83,9 +82,8 @@ if (! function_exists('class_basename')) {
      * Get the class "basename" of the given object / class.
      *
      * @param  string|object  $class
-     * @return string
      */
-    function class_basename($class)
+    function class_basename($class): string
     {
         $class = is_object($class) ? get_class($class) : $class;
 
@@ -98,9 +96,9 @@ if (! function_exists('class_uses_recursive')) {
      * Returns all traits used by a class, its parent classes and trait of their traits.
      *
      * @param  object|string  $class
-     * @return array
+     * @return array<string, string>
      */
-    function class_uses_recursive($class)
+    function class_uses_recursive($class): array
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -122,16 +120,15 @@ if (! function_exists('e')) {
      *
      * @param  \Illuminate\Contracts\Support\DeferringDisplayableValue|\Illuminate\Contracts\Support\Htmlable|\BackedEnum|string|int|float|null  $value
      * @param  bool  $doubleEncode
-     * @return string
      */
-    function e($value, $doubleEncode = true)
+    function e($value, $doubleEncode = true): string
     {
         if ($value instanceof DeferringDisplayableValue) {
             $value = $value->resolveDisplayableValue();
         }
 
         if ($value instanceof Htmlable) {
-            return $value->toHtml();
+            return $value->toHtml() ?? '';
         }
 
         if ($value instanceof BackedEnum) {
@@ -165,9 +162,8 @@ if (! function_exists('filled')) {
      * @phpstan-assert-if-false !=numeric|bool $value
      *
      * @param  mixed  $value
-     * @return bool
      */
-    function filled($value)
+    function filled($value): bool
     {
         return ! blank($value);
     }
@@ -177,12 +173,11 @@ if (! function_exists('fluent')) {
     /**
      * Create a Fluent object from the given value.
      *
-     * @param  object|array  $value
-     * @return \Illuminate\Support\Fluent
+     * @param  iterable|object|null  $value
      */
-    function fluent($value)
+    function fluent($value = null): Fluent
     {
-        return new Fluent($value);
+        return new Fluent($value ?? []);
     }
 }
 
@@ -190,7 +185,7 @@ if (! function_exists('literal')) {
     /**
      * Return a new literal or anonymous object using named arguments.
      *
-     * @return \stdClass
+     * @return mixed
      */
     function literal(...$arguments)
     {
@@ -199,6 +194,54 @@ if (! function_exists('literal')) {
         }
 
         return (object) $arguments;
+    }
+}
+
+if (! function_exists('lazy')) {
+    /**
+     * Create a lazy instance.
+     *
+     * @template TValue of object
+     *
+     * @param  class-string<TValue>|(\Closure(TValue): mixed)  $class
+     * @param  (\Closure(TValue): mixed)|int  $callback
+     * @param  int  $options
+     * @param  array<string, mixed>  $eager
+     * @return TValue
+     */
+    function lazy($class, $callback = 0, $options = 0, $eager = [])
+    {
+        static $closureReflector;
+
+        $closureReflector ??= new class
+        {
+            use ReflectsClosures;
+
+            public function typeFromParameter($callback)
+            {
+                return $this->firstClosureParameterType($callback);
+            }
+        };
+
+        [$class, $callback, $options] = is_string($class)
+            ? [$class, $callback, $options]
+            : [$closureReflector->typeFromParameter($class), $class, $callback ?: $options];
+
+        $reflectionClass = new ReflectionClass($class);
+
+        $instance = $reflectionClass->newLazyGhost(function ($instance) use ($callback) {
+            $result = $callback($instance);
+
+            if (is_array($result)) {
+                $instance->__construct(...$result);
+            }
+        }, $options);
+
+        foreach ($eager as $property => $value) {
+            $reflectionClass->getProperty($property)->setRawValueWithoutLazyInitialization($instance, $value);
+        }
+
+        return $instance;
     }
 }
 
@@ -234,10 +277,8 @@ if (! function_exists('object_get')) {
 if (! function_exists('laravel_cloud')) {
     /**
      * Determine if the application is running on Laravel Cloud.
-     *
-     * @return bool
      */
-    function laravel_cloud()
+    function laravel_cloud(): bool
     {
         return ($_ENV['LARAVEL_CLOUD'] ?? false) === '1' ||
                ($_SERVER['LARAVEL_CLOUD'] ?? false) === '1';
@@ -292,15 +333,60 @@ if (! function_exists('preg_replace_array')) {
      * @param  string  $pattern
      * @param  array  $replacements
      * @param  string  $subject
-     * @return string
      */
-    function preg_replace_array($pattern, array $replacements, $subject)
+    function preg_replace_array($pattern, array $replacements, $subject): string
     {
         return preg_replace_callback($pattern, function () use (&$replacements) {
             foreach ($replacements as $value) {
                 return array_shift($replacements);
             }
         }, $subject);
+    }
+}
+
+if (! function_exists('proxy')) {
+    /**
+     * Create a lazy proxy instance.
+     *
+     * @template TValue of object
+     *
+     * @param  class-string<TValue>|(\Closure(TValue): TValue)  $class
+     * @param  (\Closure(TValue): TValue)|int  $callback
+     * @param  int  $options
+     * @param  array<string, mixed>  $eager
+     * @return TValue
+     */
+    function proxy($class, $callback = 0, $options = 0, $eager = [])
+    {
+        static $closureReflector;
+
+        $closureReflector = new class
+        {
+            use ReflectsClosures;
+
+            public function get($callback)
+            {
+                return $this->closureReturnTypes($callback)[0] ?? $this->firstClosureParameterType($callback);
+            }
+        };
+
+        [$class, $callback, $options] = is_string($class)
+            ? [$class, $callback, $options]
+            : [$closureReflector->get($class), $class, $callback ?: $options];
+
+        $reflectionClass = new ReflectionClass($class);
+
+        $proxy = $reflectionClass->newLazyProxy(function () use ($callback, $eager, &$proxy) {
+            $instance = $callback($proxy, $eager);
+
+            return $instance;
+        }, $options);
+
+        foreach ($eager as $property => $value) {
+            $reflectionClass->getProperty($property)->setRawValueWithoutLazyInitialization($proxy, $value);
+        }
+
+        return $proxy;
     }
 }
 
@@ -407,11 +493,13 @@ if (! function_exists('throw_if')) {
      * Throw the given exception if the given condition is true.
      *
      * @template TValue
+     * @template TParams of mixed
      * @template TException of \Throwable
+     * @template TExceptionValue of TException|class-string<TException>|string
      *
      * @param  TValue  $condition
-     * @param  TException|class-string<TException>|string  $exception
-     * @param  mixed  ...$parameters
+     * @param  Closure(TParams): TExceptionValue|TExceptionValue  $exception
+     * @param  TParams  ...$parameters
      * @return ($condition is true ? never : ($condition is non-empty-mixed ? never : TValue))
      *
      * @throws TException
@@ -419,6 +507,10 @@ if (! function_exists('throw_if')) {
     function throw_if($condition, $exception = 'RuntimeException', ...$parameters)
     {
         if ($condition) {
+            if ($exception instanceof Closure) {
+                $exception = $exception(...$parameters);
+            }
+
             if (is_string($exception) && class_exists($exception)) {
                 $exception = new $exception(...$parameters);
             }
@@ -435,11 +527,13 @@ if (! function_exists('throw_unless')) {
      * Throw the given exception unless the given condition is true.
      *
      * @template TValue
+     * @template TParams of mixed
      * @template TException of \Throwable
+     * @template TExceptionValue of TException|class-string<TException>|string
      *
      * @param  TValue  $condition
-     * @param  TException|class-string<TException>|string  $exception
-     * @param  mixed  ...$parameters
+     * @param  Closure(TParams): TExceptionValue|TExceptionValue  $exception
+     * @param  TParams  ...$parameters
      * @return ($condition is false ? never : ($condition is non-empty-mixed ? TValue : never))
      *
      * @throws TException
@@ -457,9 +551,9 @@ if (! function_exists('trait_uses_recursive')) {
      * Returns all traits used by a trait and its traits.
      *
      * @param  object|string  $trait
-     * @return array
+     * @return array<string, string>
      */
-    function trait_uses_recursive($trait)
+    function trait_uses_recursive($trait): array
     {
         $traits = class_uses($trait) ?: [];
 
@@ -501,10 +595,8 @@ if (! function_exists('transform')) {
 if (! function_exists('windows_os')) {
     /**
      * Determine whether the current environment is Windows based.
-     *
-     * @return bool
      */
-    function windows_os()
+    function windows_os(): bool
     {
         return PHP_OS_FAMILY === 'Windows';
     }
